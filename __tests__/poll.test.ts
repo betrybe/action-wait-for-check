@@ -21,17 +21,13 @@ const run = () =>
 test('returns conclusion of completed check', async () => {
   client.repos.getCombinedStatusForRef.mockResolvedValue({
     data: {
-      check_runs: [
-        {
-          id: '1',
-          status: 'pending'
-        },
-        {
-          id: '2',
-          status: 'completed',
-          conclusion: 'success'
-        }
-      ]
+      statuses: [{
+        context: 'continuos-integration/travis-ci/pr',
+        state: 'failure'
+      }, {
+        context: 'test',
+        state: 'success'
+      }]
     }
   })
 
@@ -41,8 +37,7 @@ test('returns conclusion of completed check', async () => {
   expect(client.repos.getCombinedStatusForRef).toHaveBeenCalledWith({
     owner: 'testOrg',
     repo: 'testRepo',
-    ref: 'abcd',
-    check_name: 'test'
+    ref: 'abcd'
   })
 })
 
@@ -50,33 +45,35 @@ test('polls until check is completed', async () => {
   client.repos.getCombinedStatusForRef
     .mockResolvedValueOnce({
       data: {
-        check_runs: [
-          {
-            id: '1',
-            status: 'pending'
-          }
-        ]
+        statuses: [{
+          context: 'continuos-integration/travis-ci/pr',
+          state: 'failure'
+        }]
       }
     })
     .mockResolvedValueOnce({
       data: {
-        check_runs: [
-          {
-            id: '1',
-            status: 'pending'
-          }
-        ]
+        statuses: [{
+          context: 'continuos-integration/travis-ci/pr',
+          state: 'failure'
+        }, {
+          context: 'continuos-integration/travis-ci/push',
+          state: 'success'
+        }]
       }
     })
     .mockResolvedValueOnce({
       data: {
-        check_runs: [
-          {
-            id: '1',
-            status: 'completed',
-            conclusion: 'failure'
-          }
-        ]
+        statuses: [{
+          context: 'continuos-integration/travis-ci/pr',
+          state: 'success'
+        }, {
+          context: 'continuos-integration/travis-ci/push',
+          state: 'success'
+        }, {
+          context: 'test',
+          state: 'failure'
+        }]
       }
     })
 
@@ -89,12 +86,13 @@ test('polls until check is completed', async () => {
 test(`returns 'timed_out' if exceeding deadline`, async () => {
   client.repos.getCombinedStatusForRef.mockResolvedValue({
     data: {
-      check_runs: [
-        {
-          id: '1',
-          status: 'pending'
-        }
-      ]
+      statuses: [{
+        context: 'continuos-integration/travis-ci/pr',
+        state: 'failure'
+      }, {
+        context: 'continuos-integration/travis-ci/push',
+        state: 'success'
+      }]
     }
   })
 
