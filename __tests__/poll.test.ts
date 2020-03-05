@@ -1,8 +1,8 @@
 import {poll} from '../src/poll'
 
 const client = {
-  checks: {
-    listForRef: jest.fn()
+  repos: {
+    getCombinedStatusForRef: jest.fn()
   }
 }
 
@@ -19,7 +19,7 @@ const run = () =>
   })
 
 test('returns conclusion of completed check', async () => {
-  client.checks.listForRef.mockResolvedValue({
+  client.repos.getCombinedStatusForRef.mockResolvedValue({
     data: {
       check_runs: [
         {
@@ -38,7 +38,7 @@ test('returns conclusion of completed check', async () => {
   const result = await run()
 
   expect(result).toBe('success')
-  expect(client.checks.listForRef).toHaveBeenCalledWith({
+  expect(client.repos.getCombinedStatusForRef).toHaveBeenCalledWith({
     owner: 'testOrg',
     repo: 'testRepo',
     ref: 'abcd',
@@ -47,7 +47,7 @@ test('returns conclusion of completed check', async () => {
 })
 
 test('polls until check is completed', async () => {
-  client.checks.listForRef
+  client.repos.getCombinedStatusForRef
     .mockResolvedValueOnce({
       data: {
         check_runs: [
@@ -83,11 +83,11 @@ test('polls until check is completed', async () => {
   const result = await run()
 
   expect(result).toBe('failure')
-  expect(client.checks.listForRef).toHaveBeenCalledTimes(3)
+  expect(client.repos.getCombinedStatusForRef).toHaveBeenCalledTimes(3)
 })
 
 test(`returns 'timed_out' if exceeding deadline`, async () => {
-  client.checks.listForRef.mockResolvedValue({
+  client.repos.getCombinedStatusForRef.mockResolvedValue({
     data: {
       check_runs: [
         {
