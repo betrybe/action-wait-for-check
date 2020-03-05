@@ -30,7 +30,7 @@ export const poll = async (options: Options): Promise<string> => {
 
   while (now <= deadline) {
     log(
-      `Retrieving check runs named ${checkName} on ${owner}/${repo}@${ref}...`
+      `Retrieving status on ${owner}/${repo}@${ref} and filtering by ${checkName}`
     )
     const result = await client.repos.getCombinedStatusForRef({
       owner,
