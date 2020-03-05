@@ -39,21 +39,21 @@ export const poll = async (options: Options): Promise<string> => {
     })
 
     log(
-      `Retrieved ${result.data.check_runs.length} check runs named ${checkName}`
+      `Retrieved ${result.data.statuses.length} status`
     )
 
-    const completedCheck = result.data.check_runs.find(
-      checkRun => checkRun.status === 'completed'
+    const completedCheck = result.data.statuses.find(
+      status => status.context === checkName
     )
     if (completedCheck) {
       log(
-        `Found a completed check with id ${completedCheck.id} and conclusion ${completedCheck.conclusion}`
+        `Found a status with id ${completedCheck.id} and state ${completedCheck.state}`
       )
-      return completedCheck.conclusion
+      return completedCheck.state
     }
 
     log(
-      `No completed checks named ${checkName}, waiting for ${intervalSeconds} seconds...`
+      `No status named ${checkName}, waiting for ${intervalSeconds} seconds...`
     )
     await wait(intervalSeconds * 1000)
 
