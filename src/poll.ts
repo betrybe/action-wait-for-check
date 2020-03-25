@@ -38,9 +38,7 @@ export const poll = async (options: Options): Promise<string> => {
       ref
     })
 
-    log(
-      `Retrieved ${result.data.statuses.length} status`
-    )
+    log(`Retrieved ${result.data.statuses.length} status`)
 
     const completedCheck = result.data.statuses.find(
       status => status.context === checkName
