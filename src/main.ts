@@ -15,7 +15,7 @@ async function run(): Promise<void> {
       repo: core.getInput('repo') || context.repo.repo,
       ref: core.getInput('ref') || context.sha,
 
-      timeoutSeconds: parseInt(core.getInput('timeoutSeconds') || '600'),
+      timeoutSeconds: parseInt(core.getInput('timeoutSeconds') || '1800'),
       intervalSeconds: parseInt(core.getInput('intervalSeconds') || '10')
     })
 
