@@ -31,42 +31,42 @@ This Action accepts the following configuration parameters via `with:`
 - `token`
 
   **Required**
-  
+
   The GitHub token to use for making API requests. Typically, this would be set to `${{ secrets.GITHUB_TOKEN }}`.
-  
+
 - `checkName`
 
   **Required**
-  
+
   The name of the GitHub check to wait for. For example, `build` or `deploy`.
 
 - `ref`
 
   **Default: `github.sha`**
-  
+
   The Git ref of the commit you want to poll for a passing check.
-  
+
   *PROTIP: You may want to use `github.pull_request.head.sha` when working with Pull Requests.*
 
-  
+
 - `repo`
 
   **Default: `github.repo.repo`**
-  
+
   The name of the Repository you want to poll for a passing check.
 
 - `owner`
 
   **Default: `github.repo.owner`**
-  
+
   The name of the Repository's owner you want to poll for a passing check.
 
 - `timeoutSeconds`
 
-  **Default: `600`**
+  **Default: `1800`**
 
   The number of seconds to wait for the check to complete. If the check does not complete within this amount of time, this Action will emit a `conclusion` value of `timed_out`.
-  
+
 - `intervalSeconds`
 
   **Default: `10`**
