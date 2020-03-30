@@ -3229,6 +3229,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const wait_1 = __webpack_require__(521);
 exports.poll = (options) => __awaiter(void 0, void 0, void 0, function* () {
     const { client, log, checkName, timeoutSeconds, intervalSeconds, owner, repo, ref } = options;
+    const allowStateValues = ['success', 'failure'];
     let now = new Date().getTime();
     const deadline = now + timeoutSeconds * 1000;
     while (now <= deadline) {
@@ -3239,7 +3240,7 @@ exports.poll = (options) => __awaiter(void 0, void 0, void 0, function* () {
             ref
         });
         log(`Retrieved ${result.data.statuses.length} status`);
-        const completedCheck = result.data.statuses.find(status => status.context === checkName);
+        const completedCheck = result.data.statuses.find(status => status.context === checkName && allowStateValues.includes(status.state));
         if (completedCheck) {
             log(`Found a status with id ${completedCheck.id} and state ${completedCheck.state}`);
             return completedCheck.state;

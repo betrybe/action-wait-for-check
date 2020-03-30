@@ -83,6 +83,24 @@ test('polls until check is completed', async () => {
           },
           {
             context: 'test',
+            state: 'pending'
+          }
+        ]
+      }
+    })
+    .mockResolvedValueOnce({
+      data: {
+        statuses: [
+          {
+            context: 'continuos-integration/travis-ci/pr',
+            state: 'success'
+          },
+          {
+            context: 'continuos-integration/travis-ci/push',
+            state: 'success'
+          },
+          {
+            context: 'test',
             state: 'failure'
           }
         ]
@@ -92,7 +110,7 @@ test('polls until check is completed', async () => {
   const result = await run()
 
   expect(result).toBe('failure')
-  expect(client.repos.getCombinedStatusForRef).toHaveBeenCalledTimes(3)
+  expect(client.repos.getCombinedStatusForRef).toHaveBeenCalledTimes(4)
 })
 
 test(`returns 'timed_out' if exceeding deadline`, async () => {
