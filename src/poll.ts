@@ -25,6 +25,8 @@ export const poll = async (options: Options): Promise<string> => {
     ref
   } = options
 
+  const allowStateValues: string[] = ['success', 'failure']
+
   let now = new Date().getTime()
   const deadline = now + timeoutSeconds * 1000
 
@@ -41,7 +43,7 @@ export const poll = async (options: Options): Promise<string> => {
     log(`Retrieved ${result.data.statuses.length} status`)
 
     const completedCheck = result.data.statuses.find(
-      status => status.context === checkName
+      status => status.context === checkName && allowStateValues.includes(status.state)
     )
     if (completedCheck) {
       log(
